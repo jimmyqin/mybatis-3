@@ -11,4 +11,32 @@
   <select id="selectMemberById" resultMap="memberResult">
     select * from member where id = #{id} and username = #{name}
   </select>
+
+  <insert id="insertMember" parameterType="org.apache.ibatis.example.Member">
+    insert into member
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">id,</if>
+      <if test="username != null">username,</if>
+      <if test="password != null">password,</if>
+      <if test="nickName != null">nick_name,</if>
+      <if test="mail != null">mail,</if>
+      <if test="mobileNo != null">mobile_no,</if>
+      <if test="sex != null">sex,</if>
+      <if test="status != null">status,</if>
+      <if test="createTime != null">create_time,</if>
+      <if test="updateTime != null">update_time,</if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">#{id},</if>
+      <if test="username != null">#{username},</if>
+      <if test="password != null">#{password},</if>
+      <if test="nickName != null">#{nickName},</if>
+      <if test="mail != null">#{mail},</if>
+      <if test="mobileNo != null">#{mobileNo},</if>
+      <if test="sex != null">#{sex},</if>
+      <if test="status != null">#{status},</if>
+      <if test="createTime != null">#{createTime},</if>
+      <if test="updateTime != null">#{updateTime},</if>
+    </trim>
+  </insert>
 </mapper>
