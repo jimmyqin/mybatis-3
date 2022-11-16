@@ -49,7 +49,7 @@ public class MetaObject {
     } else if (objectWrapperFactory.hasWrapperFor(object)) {
       this.objectWrapper = objectWrapperFactory.getWrapperFor(this, object);
     } else if (object instanceof Map) {
-      this.objectWrapper = new MapWrapper(this, (Map) object);
+      this.objectWrapper = new MapWrapper(this, (Map) object);// 看里面构造函数就明白了，把object赋值给了map属性
     } else if (object instanceof Collection) {
       this.objectWrapper = new CollectionWrapper(this, (Collection) object);
     } else {
@@ -119,7 +119,7 @@ public class MetaObject {
         return metaValue.getValue(prop.getChildren());
       }
     } else {
-      return objectWrapper.get(prop);
+      return objectWrapper.get(prop); //这里就是之前parameterObject接口参数封装的对象，如果parameterObject是个map，会赋值给MapWrapper的属性值map，这个objectWrapper就是MapWrapper
     }
   }
 
@@ -137,7 +137,7 @@ public class MetaObject {
       }
       metaValue.setValue(prop.getChildren(), value);
     } else {
-      objectWrapper.set(prop, value);
+      objectWrapper.set(prop, value);// BeanWrapper里面看，其实是通过反射执行方法set
     }
   }
 

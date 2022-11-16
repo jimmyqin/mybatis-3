@@ -140,7 +140,7 @@ public abstract class BaseBuilder {
     TypeHandler<?> handler = typeHandlerRegistry.getMappingTypeHandler(typeHandlerType);
     if (handler == null) {
       // not in registry, create a new one
-      handler = typeHandlerRegistry.getInstance(javaType, typeHandlerType);
+      handler = typeHandlerRegistry.getInstance(javaType, typeHandlerType); // 指定类型处理器实例化
     }
     return handler;
   }

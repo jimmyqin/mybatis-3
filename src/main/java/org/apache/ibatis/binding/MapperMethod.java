@@ -50,11 +50,12 @@ public class MapperMethod {
   private final MethodSignature method;
 
   public MapperMethod(Class<?> mapperInterface, Method method, Configuration config) {
-    this.command = new SqlCommand(config, mapperInterface, method);
-    this.method = new MethodSignature(config, mapperInterface, method);
+    this.command = new SqlCommand(config, mapperInterface, method); //大概是MappedStatement处理
+    this.method = new MethodSignature(config, mapperInterface, method); //根据方法签名解析方法相关数据，比如说返回值是什么类型之类的
   }
 
   public Object execute(SqlSession sqlSession, Object[] args) {
+    // 根据类型判断是什么语句
     Object result;
     switch (command.getType()) {
       case INSERT: {
@@ -83,8 +84,8 @@ public class MapperMethod {
         } else if (method.returnsCursor()) {
           result = executeForCursor(sqlSession, args);
         } else {
-          Object param = method.convertArgsToSqlCommandParam(args);
-          result = sqlSession.selectOne(command.getName(), param);
+          Object param = method.convertArgsToSqlCommandParam(args);// mapper接口中方法参数处理
+          result = sqlSession.selectOne(command.getName(), param); // 执行主逻辑
           if (method.returnsOptional()
               && (result == null || !method.getReturnType().equals(result.getClass()))) {
             result = Optional.ofNullable(result);
@@ -218,12 +219,13 @@ public class MapperMethod {
 
   public static class SqlCommand {
 
-    private final String name;
-    private final SqlCommandType type;
+    private final String name; //这个就是全限定名称+方法名称
+    private final SqlCommandType type; // 枚举，是更新还是查询或者删除等其他
 
     public SqlCommand(Configuration configuration, Class<?> mapperInterface, Method method) {
       final String methodName = method.getName();
       final Class<?> declaringClass = method.getDeclaringClass();
+      // 这里拿到需处理执行的MappedStatement
       MappedStatement ms = resolveMappedStatement(mapperInterface, methodName, declaringClass,
           configuration);
       if (ms == null) {
@@ -253,7 +255,7 @@ public class MapperMethod {
 
     private MappedStatement resolveMappedStatement(Class<?> mapperInterface, String methodName,
         Class<?> declaringClass, Configuration configuration) {
-      String statementId = mapperInterface.getName() + "." + methodName;
+      String statementId = mapperInterface.getName() + "." + methodName; // 根据当前的接口和方法拿到需处理执行的MappedStatement
       if (configuration.hasStatement(statementId)) {
         return configuration.getMappedStatement(statementId);
       } else if (mapperInterface.equals(declaringClass)) {

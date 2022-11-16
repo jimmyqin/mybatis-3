@@ -35,7 +35,7 @@ public class UnpooledDataSourceFactory implements DataSourceFactory {
   protected DataSource dataSource;
 
   public UnpooledDataSourceFactory() {
-    this.dataSource = new UnpooledDataSource();
+    this.dataSource = new UnpooledDataSource(); // 创建dataSource
   }
 
   @Override

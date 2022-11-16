@@ -84,7 +84,7 @@ public class CachingExecutor implements Executor {
 
   @Override
   public <E> List<E> query(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException {
-    BoundSql boundSql = ms.getBoundSql(parameterObject);
+    BoundSql boundSql = ms.getBoundSql(parameterObject);//主要是把parameterObject参数和sql封装到一起
     CacheKey key = createCacheKey(ms, parameterObject, rowBounds, boundSql);
     return query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
   }
@@ -106,7 +106,7 @@ public class CachingExecutor implements Executor {
         return list;
       }
     }
-    return delegate.query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
+    return delegate.query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);//走这里
   }
 
   @Override

@@ -36,7 +36,7 @@ import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
  */
 public class DefaultSqlSessionFactory implements SqlSessionFactory {
 
-  private final Configuration configuration;
+  private final Configuration configuration; //全部配置都在里面了
 
   public DefaultSqlSessionFactory(Configuration configuration) {
     this.configuration = configuration;

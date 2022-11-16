@@ -248,13 +248,13 @@ public class UnpooledDataSource implements DataSource {
 
   private void configureConnection(Connection conn) throws SQLException {
     if (defaultNetworkTimeout != null) {
-      conn.setNetworkTimeout(Executors.newSingleThreadExecutor(), defaultNetworkTimeout);
+      conn.setNetworkTimeout(Executors.newSingleThreadExecutor(), defaultNetworkTimeout); // 超时时间设置
     }
     if (autoCommit != null && autoCommit != conn.getAutoCommit()) {
-      conn.setAutoCommit(autoCommit);
+      conn.setAutoCommit(autoCommit); // 自动提交事务设置
     }
     if (defaultTransactionIsolationLevel != null) {
-      conn.setTransactionIsolation(defaultTransactionIsolationLevel);
+      conn.setTransactionIsolation(defaultTransactionIsolationLevel); // 事务隔离级别设置
     }
   }
 

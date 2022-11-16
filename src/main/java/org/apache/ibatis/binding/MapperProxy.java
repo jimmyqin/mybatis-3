@@ -83,6 +83,7 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
       if (Object.class.equals(method.getDeclaringClass())) {
         return method.invoke(this, args);
       } else {
+        // cachedInvoker主要是缓存MethodHandle,避免重复创建
         return cachedInvoker(method).invoke(proxy, method, args, sqlSession);
       }
     } catch (Throwable t) {
@@ -92,6 +93,7 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
 
   private MapperMethodInvoker cachedInvoker(Method method) throws Throwable {
     try {
+      // 缓存执行的方法
       return MapUtil.computeIfAbsent(methodCache, method, m -> {
         if (m.isDefault()) {
           try {
@@ -105,6 +107,8 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
             throw new RuntimeException(e);
           }
         } else {
+          // method本来是一个接口方法，需对其进行包装，来实现框架的切入点调用，具体看MapperMethod的execute()方法
+          // 这里的PlainMethodInvoker没啥用
           return new PlainMethodInvoker(new MapperMethod(mapperInterface, method, sqlSession.getConfiguration()));
         }
       });

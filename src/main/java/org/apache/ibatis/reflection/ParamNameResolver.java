@@ -57,7 +57,7 @@ public class ParamNameResolver {
   public ParamNameResolver(Configuration config, Method method) {
     this.useActualParamName = config.isUseActualParamName();
     final Class<?>[] paramTypes = method.getParameterTypes();
-    final Annotation[][] paramAnnotations = method.getParameterAnnotations();
+    final Annotation[][] paramAnnotations = method.getParameterAnnotations();// 这里会拿到@Param注解
     final SortedMap<Integer, String> map = new TreeMap<>();
     int paramCount = paramAnnotations.length;
     // get names from @Param annotations
@@ -123,15 +123,15 @@ public class ParamNameResolver {
     final int paramCount = names.size();
     if (args == null || paramCount == 0) {
       return null;
-    } else if (!hasParamAnnotation && paramCount == 1) {
-      Object value = args[names.firstKey()];
+    } else if (!hasParamAnnotation && paramCount == 1) {// 只有一个参数处理
+      Object value = args[names.firstKey()]; // 取值
       return wrapToMapIfCollection(value, useActualParamName ? names.get(0) : null);
     } else {
-      final Map<String, Object> param = new ParamMap<>();
+      final Map<String, Object> param = new ParamMap<>(); // 多个参数处理，如果有@param注解，names存储的就是该注解的参数名称，@Param在此类构造函数已经解析好了
       int i = 0;
       for (Map.Entry<Integer, String> entry : names.entrySet()) {
         param.put(entry.getValue(), args[entry.getKey()]);
-        // add generic param names (param1, param2, ...)
+        // add generic param names (param1, param2, ...) 也会以param1为key，重复放一份进去
         final String genericParamName = GENERIC_NAME_PREFIX + (i + 1);
         // ensure not to overwrite parameter named with @Param
         if (!names.containsValue(genericParamName)) {
@@ -153,13 +153,14 @@ public class ParamNameResolver {
    * @since 3.5.5
    */
   public static Object wrapToMapIfCollection(Object object, String actualParamName) {
+    // 判断参数是集合或者数组类型，会放到map集合中，否则原样返回
     if (object instanceof Collection) {
       ParamMap<Object> map = new ParamMap<>();
       map.put("collection", object);
       if (object instanceof List) {
         map.put("list", object);
       }
-      Optional.ofNullable(actualParamName).ifPresent(name -> map.put(name, object));
+      Optional.ofNullable(actualParamName).ifPresent(name -> map.put(name, object)); //arg0别名也放一份，相当于有双份了
       return map;
     } else if (object != null && object.getClass().isArray()) {
       ParamMap<Object> map = new ParamMap<>();

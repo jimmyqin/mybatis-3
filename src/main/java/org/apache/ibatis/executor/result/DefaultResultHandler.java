@@ -35,7 +35,7 @@ public class DefaultResultHandler implements ResultHandler<Object> {
 
   @SuppressWarnings("unchecked")
   public DefaultResultHandler(ObjectFactory objectFactory) {
-    list = objectFactory.create(List.class);
+    list = objectFactory.create(List.class);//这里最终只是反射创建List而已
   }
 
   @Override

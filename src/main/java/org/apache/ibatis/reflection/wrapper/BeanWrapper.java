@@ -56,7 +56,7 @@ public class BeanWrapper extends BaseWrapper {
       Object collection = resolveCollection(prop, object);
       setCollectionValue(prop, collection, value);
     } else {
-      setBeanProperty(prop, object, value);
+      setBeanProperty(prop, object, value);// 这里
     }
   }
 
@@ -174,10 +174,10 @@ public class BeanWrapper extends BaseWrapper {
 
   private void setBeanProperty(PropertyTokenizer prop, Object object, Object value) {
     try {
-      Invoker method = metaClass.getSetInvoker(prop.getName());
+      Invoker method = metaClass.getSetInvoker(prop.getName()); // 通过名称拿到方法
       Object[] params = {value};
       try {
-        method.invoke(object, params);
+        method.invoke(object, params); // 执行方法set操作
       } catch (Throwable t) {
         throw ExceptionUtil.unwrapThrowable(t);
       }

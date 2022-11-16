@@ -61,7 +61,7 @@ public class DefaultParameterHandler implements ParameterHandler {
   @Override
   public void setParameters(PreparedStatement ps) {
     ErrorContext.instance().activity("setting parameters").object(mappedStatement.getParameterMap().getId());
-    List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
+    List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();//parameterMappings这个是拿到的是自己写的sql中的变量参数名称
     if (parameterMappings != null) {
       for (int i = 0; i < parameterMappings.size(); i++) {
         ParameterMapping parameterMapping = parameterMappings.get(i);
@@ -75,15 +75,16 @@ public class DefaultParameterHandler implements ParameterHandler {
           } else if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
             value = parameterObject;
           } else {
-            MetaObject metaObject = configuration.newMetaObject(parameterObject);
-            value = metaObject.getValue(propertyName);
+            MetaObject metaObject = configuration.newMetaObject(parameterObject);//如果mapper接口方法是多参数，其实parameterObject是一个Map，把parameterObject进行转化，具体看里面逻辑
+            value = metaObject.getValue(propertyName); // 这里通过上面转化后可以拿到
           }
-          TypeHandler typeHandler = parameterMapping.getTypeHandler();
+          TypeHandler typeHandler = parameterMapping.getTypeHandler(); // 拿到参数对应的处理器
           JdbcType jdbcType = parameterMapping.getJdbcType();
           if (value == null && jdbcType == null) {
             jdbcType = configuration.getJdbcTypeForNull();
           }
           try {
+            // 参数解析器，可以自定义扩展，其实最终调用的是ps.setString(i, parameter);相当于原始的jdbc设置参数的方式了,只是对其进行了包装，调用前可以自行决定怎么处理转换参数
             typeHandler.setParameter(ps, i + 1, value, jdbcType);
           } catch (TypeException | SQLException e) {
             throw new TypeException("Could not set parameters for mapping: " + parameterMapping + ". Cause: " + e, e);

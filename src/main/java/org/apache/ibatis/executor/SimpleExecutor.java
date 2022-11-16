@@ -58,8 +58,9 @@ public class SimpleExecutor extends BaseExecutor {
     Statement stmt = null;
     try {
       Configuration configuration = ms.getConfiguration();
+      // 拿到的handler只是对相应的Statement进行进一步封装而已,具体可以查看里面的update,query等方法
       StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, resultHandler, boundSql);
-      stmt = prepareStatement(handler, ms.getStatementLog());
+      stmt = prepareStatement(handler, ms.getStatementLog()); //主要做了拿到连接，然后给sql中的变量设置接口传进来的参数值
       return handler.query(stmt, resultHandler);
     } finally {
       closeStatement(stmt);
@@ -83,9 +84,9 @@ public class SimpleExecutor extends BaseExecutor {
 
   private Statement prepareStatement(StatementHandler handler, Log statementLog) throws SQLException {
     Statement stmt;
-    Connection connection = getConnection(statementLog);
+    Connection connection = getConnection(statementLog);// 拿到连接
     stmt = handler.prepare(connection, transaction.getTimeout());
-    handler.parameterize(stmt);
+    handler.parameterize(stmt); //这里会为sql语句填充参数值
     return stmt;
   }
 

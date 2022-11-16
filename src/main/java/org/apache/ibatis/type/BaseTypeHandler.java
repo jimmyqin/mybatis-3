@@ -69,7 +69,7 @@ public abstract class BaseTypeHandler<T> extends TypeReference<T> implements Typ
               + "Cause: " + e, e);
       }
     } else {
-      try {
+      try { //看这里
         setNonNullParameter(ps, i, parameter, jdbcType);
       } catch (Exception e) {
         throw new TypeException("Error setting non null for parameter #" + i + " with JdbcType " + jdbcType + " . "

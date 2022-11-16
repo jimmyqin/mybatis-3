@@ -93,7 +93,7 @@ public class XMLStatementBuilder extends BaseBuilder {
           ? Jdbc3KeyGenerator.INSTANCE : NoKeyGenerator.INSTANCE;
     }
 
-    SqlSource sqlSource = langDriver.createSqlSource(configuration, context, parameterTypeClass);
+    SqlSource sqlSource = langDriver.createSqlSource(configuration, context, parameterTypeClass); // 解析sql，解析成一个个嵌套节点，具体调试看SqlSource，有个sqlNode
     StatementType statementType = StatementType.valueOf(context.getStringAttribute("statementType", StatementType.PREPARED.toString()));
     Integer fetchSize = context.getIntAttribute("fetchSize");
     Integer timeout = context.getIntAttribute("timeout");

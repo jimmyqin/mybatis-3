@@ -234,6 +234,8 @@ public final class TypeHandlerRegistry {
     if (ParamMap.class.equals(type)) {
       return null;
     }
+    // 通过java类型拿到符合对应jdbc的处理器
+    // jdbc的类型为空，会根据java的类型来拿对应的处理器，比如jdbc类型为空，Long类型会用LongTypeHandler
     Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = getJdbcHandlerMap(type);
     TypeHandler<?> handler = null;
     if (jdbcHandlerMap != null) {
