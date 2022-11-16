@@ -55,7 +55,7 @@ public abstract class BaseExecutor implements Executor {
   protected Executor wrapper;
 
   protected ConcurrentLinkedQueue<DeferredLoad> deferredLoads;
-  protected PerpetualCache localCache;
+  protected PerpetualCache localCache; // 本地缓存
   protected PerpetualCache localOutputParameterCache;
   protected Configuration configuration;
 
@@ -113,7 +113,7 @@ public abstract class BaseExecutor implements Executor {
     if (closed) {
       throw new ExecutorException("Executor was closed.");
     }
-    clearLocalCache();
+    clearLocalCache();// 更新操作都会先清除本地缓存
     return doUpdate(ms, parameter);
   }
 

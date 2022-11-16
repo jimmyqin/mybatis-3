@@ -6,6 +6,8 @@
   <environments default="development">
     <environment id="development">
       <transactionManager type="JDBC"/>
+<!--      mybatis如果底层使用的是JDBC的话（mybatis.xml中配置的 transactionManager 标签的 type 设为 JDBC-->
+<!--      那么，mybatis会默认开启事务，也就是说，mybatis默认是关闭自动提交的。-->
       <dataSource type="POOLED">
         <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
         <property name="url" value="jdbc:mysql://101.43.17.123:3306/blog?useUnicode=true&amp;serverTimezone=Asia/Shanghai&amp;characterEncoding=utf-8&amp;useSSL=false"/>

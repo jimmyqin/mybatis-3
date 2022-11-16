@@ -60,7 +60,7 @@ public class MapperMethod {
     switch (command.getType()) {
       case INSERT: {
         Object param = method.convertArgsToSqlCommandParam(args);
-        result = rowCountResult(sqlSession.insert(command.getName(), param));
+        result = rowCountResult(sqlSession.insert(command.getName(), param));//看insert
         break;
       }
       case UPDATE: {

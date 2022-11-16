@@ -49,7 +49,7 @@ public class MetaObject {
     } else if (objectWrapperFactory.hasWrapperFor(object)) {
       this.objectWrapper = objectWrapperFactory.getWrapperFor(this, object);
     } else if (object instanceof Map) {
-      this.objectWrapper = new MapWrapper(this, (Map) object);// 看里面构造函数就明白了，把object赋值给了map属性
+      this.objectWrapper = new MapWrapper(this, (Map) object);// 多个参数，会是map，才走这里，看里面构造函数就明白了，把object赋值给了map属性
     } else if (object instanceof Collection) {
       this.objectWrapper = new CollectionWrapper(this, (Collection) object);
     } else {

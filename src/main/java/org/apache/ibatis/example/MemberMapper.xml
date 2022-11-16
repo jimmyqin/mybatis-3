@@ -12,6 +12,10 @@
     select * from member where id = #{id} and username = #{name}
   </select>
 
+  <select id="selectMemberList" resultMap="memberResult">
+    select * from member
+  </select>
+
   <insert id="insertMember" parameterType="org.apache.ibatis.example.Member">
     insert into member
     <trim prefix="(" suffix=")" suffixOverrides=",">

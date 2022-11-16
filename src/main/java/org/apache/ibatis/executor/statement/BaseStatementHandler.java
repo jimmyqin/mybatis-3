@@ -60,7 +60,7 @@ public abstract class BaseStatementHandler implements StatementHandler {
     this.objectFactory = configuration.getObjectFactory();
 
     if (boundSql == null) { // issue #435, get the key before calculating the statement
-      generateKeys(parameterObject);
+      generateKeys(parameterObject); //这里可以为插入语句生成id
       boundSql = mappedStatement.getBoundSql(parameterObject);
     }
 

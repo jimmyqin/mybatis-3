@@ -57,7 +57,7 @@ public class ParamNameResolver {
   public ParamNameResolver(Configuration config, Method method) {
     this.useActualParamName = config.isUseActualParamName();
     final Class<?>[] paramTypes = method.getParameterTypes();
-    final Annotation[][] paramAnnotations = method.getParameterAnnotations();// 这里会拿到@Param注解
+    final Annotation[][] paramAnnotations = method.getParameterAnnotations();// 这里会拿到@Param注解，下面处理
     final SortedMap<Integer, String> map = new TreeMap<>();
     int paramCount = paramAnnotations.length;
     // get names from @Param annotations
