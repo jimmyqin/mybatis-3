@@ -41,13 +41,37 @@ public class SqlSourceBuilder extends BaseBuilder {
   }
 
   public SqlSource parse(String originalSql, Class<?> parameterType, Map<String, Object> additionalParameters) {
+    // select * from member where id = #{id} and username = #{name}   --> originalSql字符原样
+    // 下面转换处理会处理成：select * from member where id = ? and username = ?
     ParameterMappingTokenHandler handler = new ParameterMappingTokenHandler(configuration, parameterType, additionalParameters);
     GenericTokenParser parser = new GenericTokenParser("#{", "}", handler);
     String sql;
     if (configuration.isShrinkWhitespacesInSql()) {
       sql = parser.parse(removeExtraWhitespaces(originalSql));
     } else {
-      sql = parser.parse(originalSql);
+      sql = parser.parse(originalSql);// 处理转换#{xxx}
+      //处理成下面的字符串
+      // insert into member
+      //     ( id,
+      //      username,
+      //      password,
+      //      nick_name,
+      //      mail,
+      //      mobile_no,
+      //      sex,
+      //      status,
+      //      create_time,
+      //      update_time )
+      //     values ( ?,
+      //      ?,
+      //      ?,
+      //      ?,
+      //      ?,
+      //      ?,
+      //      ?,
+      //      ?,
+      //      ?,
+      //      ? )
     }
     return new StaticSqlSource(configuration, sql, handler.getParameterMappings());
   }

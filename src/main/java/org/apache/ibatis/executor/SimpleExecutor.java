@@ -45,6 +45,7 @@ public class SimpleExecutor extends BaseExecutor {
     Statement stmt = null;
     try {
       Configuration configuration = ms.getConfiguration();
+      // 构建StatementHandler的时候会对sql进行ognl处理
       StatementHandler handler = configuration.newStatementHandler(this, ms, parameter, RowBounds.DEFAULT, null, null);
       stmt = prepareStatement(handler, ms.getStatementLog());
       return handler.update(stmt);
@@ -58,9 +59,10 @@ public class SimpleExecutor extends BaseExecutor {
     Statement stmt = null;
     try {
       Configuration configuration = ms.getConfiguration();
-      // 拿到的handler只是对相应的Statement进行进一步封装而已,具体可以查看里面的update,query等方法
+      // 拿到的handler只是对相应的Statement进行进一步封装而已（Statement是jdbc的东西）,具体可以查看里面的update,query等方法
+      // 自定义插件可以给StatementHandler创建一个Plugin代理
       StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, resultHandler, boundSql);
-      stmt = prepareStatement(handler, ms.getStatementLog()); //主要做了拿到连接，然后给sql中的变量设置接口传进来的参数值
+      stmt = prepareStatement(handler, ms.getStatementLog()); //主要做了：拿到连接，然后用接口传进来的参数值给sql中的变量赋值
       return handler.query(stmt, resultHandler);
     } finally {
       closeStatement(stmt);

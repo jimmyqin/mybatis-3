@@ -76,7 +76,7 @@ public class DefaultParameterHandler implements ParameterHandler {
             value = parameterObject;
           } else {
             MetaObject metaObject = configuration.newMetaObject(parameterObject);//如果mapper接口方法是多参数，其实parameterObject是一个Map，把parameterObject进行转化，具体看里面逻辑
-            value = metaObject.getValue(propertyName); // 如果mapper接口方法是单个参数，这里会最终反射调用get获取参数值
+            value = metaObject.getValue(propertyName); // 如果mapper接口方法是单个参数对象类型，这里会最终反射调用get获取参数值
           }
           TypeHandler typeHandler = parameterMapping.getTypeHandler(); // 拿到参数对应的处理器
           JdbcType jdbcType = parameterMapping.getJdbcType();

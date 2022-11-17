@@ -31,7 +31,7 @@ public class IfSqlNode implements SqlNode {
 
   @Override
   public boolean apply(DynamicContext context) {
-    if (evaluator.evaluateBoolean(test, context.getBindings())) {
+    if (evaluator.evaluateBoolean(test, context.getBindings())) { //会使用ognl表达式判断<if test="updateTime != null"> 中的updateTime != null是否为true
       contents.apply(context);
       return true;
     }

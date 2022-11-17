@@ -42,7 +42,7 @@ public class Plugin implements InvocationHandler {
   }
 
   public static Object wrap(Object target, Interceptor interceptor) {
-    Map<Class<?>, Set<Method>> signatureMap = getSignatureMap(interceptor);
+    Map<Class<?>, Set<Method>> signatureMap = getSignatureMap(interceptor); //这里会根据注解拿到要拦截的方法信息
     Class<?> type = target.getClass();
     Class<?>[] interfaces = getAllInterfaces(type, signatureMap);
     if (interfaces.length > 0) {
@@ -59,7 +59,7 @@ public class Plugin implements InvocationHandler {
     try {
       Set<Method> methods = signatureMap.get(method.getDeclaringClass());
       if (methods != null && methods.contains(method)) {
-        return interceptor.intercept(new Invocation(target, method, args));
+        return interceptor.intercept(new Invocation(target, method, args)); //调用了插件方法
       }
       return method.invoke(target, args);
     } catch (Exception e) {

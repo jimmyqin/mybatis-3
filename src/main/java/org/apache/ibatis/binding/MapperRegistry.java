@@ -42,12 +42,12 @@ public class MapperRegistry {
 
   @SuppressWarnings("unchecked")
   public <T> T getMapper(Class<T> type, SqlSession sqlSession) {
-    final MapperProxyFactory<T> mapperProxyFactory = (MapperProxyFactory<T>) knownMappers.get(type);
+    final MapperProxyFactory<T> mapperProxyFactory = (MapperProxyFactory<T>) knownMappers.get(type);// 获取匹配的代理工厂
     if (mapperProxyFactory == null) {
       throw new BindingException("Type " + type + " is not known to the MapperRegistry.");
     }
     try {
-      return mapperProxyFactory.newInstance(sqlSession);
+      return mapperProxyFactory.newInstance(sqlSession); // 通过代理工厂创建实例
     } catch (Exception e) {
       throw new BindingException("Error getting mapper instance. Cause: " + e, e);
     }

@@ -57,7 +57,7 @@ public class ParamNameResolver {
   public ParamNameResolver(Configuration config, Method method) {
     this.useActualParamName = config.isUseActualParamName();
     final Class<?>[] paramTypes = method.getParameterTypes();
-    final Annotation[][] paramAnnotations = method.getParameterAnnotations();// 这里会拿到@Param注解，下面处理
+    final Annotation[][] paramAnnotations = method.getParameterAnnotations();// 这里会拿到@Param注解，下面处理主要是拿到参数别名和参数索引位置名
     final SortedMap<Integer, String> map = new TreeMap<>();
     int paramCount = paramAnnotations.length;
     // get names from @Param annotations
@@ -75,9 +75,9 @@ public class ParamNameResolver {
         }
       }
       if (name == null) {
-        // @Param was not specified.
+        // @Param was not specified. 没有注解@Param 的处理
         if (useActualParamName) {
-          name = getActualParamName(method, paramIndex);
+          name = getActualParamName(method, paramIndex); //没有就用arg0
         }
         if (name == null) {
           // use the parameter index as the name ("0", "1", ...)

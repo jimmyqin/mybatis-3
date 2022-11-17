@@ -29,7 +29,7 @@ import org.apache.ibatis.builder.BuilderException;
 public class ExpressionEvaluator {
 
   public boolean evaluateBoolean(String expression, Object parameterObject) {
-    Object value = OgnlCache.getValue(expression, parameterObject);
+    Object value = OgnlCache.getValue(expression, parameterObject); //ognl表达式判断
     if (value instanceof Boolean) {
       return (Boolean) value;
     }

@@ -302,7 +302,7 @@ public final class MappedStatement {
   }
 
   public BoundSql getBoundSql(Object parameterObject) {
-    BoundSql boundSql = sqlSource.getBoundSql(parameterObject);
+    BoundSql boundSql = sqlSource.getBoundSql(parameterObject);//里面会处理sql的ognl处理等，变成select * from member where id = ?  and username = ?
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
     if (parameterMappings == null || parameterMappings.isEmpty()) {
       boundSql = new BoundSql(configuration, boundSql.getSql(), parameterMap.getParameterMappings(), parameterObject);

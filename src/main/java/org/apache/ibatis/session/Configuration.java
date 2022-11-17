@@ -690,7 +690,9 @@ public class Configuration {
 
   public StatementHandler newStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
     StatementHandler statementHandler = new RoutingStatementHandler(executor, mappedStatement, parameterObject, rowBounds, resultHandler, boundSql);
-    statementHandler = (StatementHandler) interceptorChain.pluginAll(statementHandler);// 对statementHandler进行代理创建,主要是通过代理实现插件逻辑
+    // 对statementHandler进行Plugin代理创建,Plugin#invok()方法中会调用自定义插件实现的intercept方法
+    // 最终在调用statementHandler的处理时候会先调用代理逻辑，然后调用statementHandler真实的逻辑
+    statementHandler = (StatementHandler) interceptorChain.pluginAll(statementHandler);
     return statementHandler;
   }
 
@@ -710,9 +712,9 @@ public class Configuration {
       executor = new SimpleExecutor(this, transaction);
     }
     if (cacheEnabled) {
-      executor = new CachingExecutor(executor);
+      executor = new CachingExecutor(executor); // 装饰包装一成缓存执行器
     }
-    executor = (Executor) interceptorChain.pluginAll(executor); // 拦截器装配
+    executor = (Executor) interceptorChain.pluginAll(executor); // 可以给Executor创建代理拦截器装配
     return executor;
   }
 

@@ -9,7 +9,7 @@
     <result column="password" property="password"/>
   </resultMap>
   <select id="selectMemberById" resultMap="memberResult">
-    select * from member where id = #{id} and username = #{name}
+    select * from member where id = #{id} <if test="name != null">and username = #{name} </if>
   </select>
 
   <select id="selectMemberList" resultMap="memberResult">

@@ -305,7 +305,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         handleRowValues(rsw, resultMap, null, RowBounds.DEFAULT, parentMapping);
       } else {
         if (resultHandler == null) {//resultHandler一般默认为空
-          DefaultResultHandler defaultResultHandler = new DefaultResultHandler(objectFactory);//构造一个默认的处理器
+          DefaultResultHandler defaultResultHandler = new DefaultResultHandler(objectFactory);//构造一个默认的处理器，里面没啥逻辑
           handleRowValues(rsw, resultMap, defaultResultHandler, rowBounds, null);// 结果处理填充，处理好的结果都封装在处理器里面了
           multipleResults.add(defaultResultHandler.getResultList());//拿到结果
         } else {
@@ -405,12 +405,13 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     Object rowValue = createResultObject(rsw, resultMap, lazyLoader, columnPrefix);// 根据<resultMap 中的type创建返回结果的实例，此时还没有填充数据结果
     if (rowValue != null && !hasTypeHandlerForResultObject(rsw, resultMap.getType())) {
       // rowValue封装到metaObject的originalObject属性和BeanWrapper的object这个的属性中，具体看里面创建过程
+      // 此时rowValue还没填充数据结果
       final MetaObject metaObject = configuration.newMetaObject(rowValue);
       boolean foundValues = this.useConstructorMappings;
       if (shouldApplyAutomaticMappings(resultMap, false)) {
         foundValues = applyAutomaticMappings(rsw, resultMap, metaObject, columnPrefix) || foundValues;
       }
-      // 赋值好的结果都在metaObject里面的objectWrapper实现类BeanWrapper的属性object里面了
+      // 结果处理，赋值好的结果都在metaObject里面的objectWrapper实现类BeanWrapper的属性object里面了
       foundValues = applyPropertyMappings(rsw, resultMap, metaObject, lazyLoader, columnPrefix) || foundValues;
       foundValues = lazyLoader.size() > 0 || foundValues;
       rowValue = foundValues || configuration.isReturnInstanceForEmptyRow() ? rowValue : null;
@@ -479,7 +480,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     boolean foundValues = false;
     final List<ResultMapping> propertyMappings = resultMap.getPropertyResultMappings(); // 拿到sql中的<resultMap 中的每一个result
     for (ResultMapping propertyMapping : propertyMappings) {//这里的propertyMapping就是<resultMap 中的result封装
-      String column = prependPrefix(propertyMapping.getColumn(), columnPrefix); //拿result中的column属性
+      String column = prependPrefix(propertyMapping.getColumn(), columnPrefix);
       if (propertyMapping.getNestedResultMapId() != null) {
         // the user added a column attribute to a nested result map, ignore it
         column = null;
@@ -487,7 +488,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       if (propertyMapping.isCompositeResult()
           || (column != null && mappedColumnNames.contains(column.toUpperCase(Locale.ENGLISH)))
           || propertyMapping.getResultSet() != null) {
-        // 最终是调用rs.getString(columnName)拿到结果后，然后相应的类型处理器执行处理
+        // 最终是调用rs.getString(columnName)拿到结果后，然后相应的类型处理器执行结果处理
         Object value = getPropertyMappingValue(rsw.getResultSet(), metaObject, propertyMapping, lazyLoader, columnPrefix);// 结果处理器就是里面执行了
         // issue #541 make property optional
         final String property = propertyMapping.getProperty();//拿result中的property属性
@@ -579,7 +580,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         }
         if (value != null || (configuration.isCallSettersOnNulls() && !mapping.primitive)) {
           // gcode issue #377, call setter on nulls (value is not 'found')
-          metaObject.setValue(mapping.property, value);
+          metaObject.setValue(mapping.property, value);// 赋值操作
         }
       }
     }

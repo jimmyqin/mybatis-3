@@ -28,7 +28,7 @@ public class InterceptorChain {
 
   public Object pluginAll(Object target) {
     for (Interceptor interceptor : interceptors) {
-      target = interceptor.plugin(target);
+      target = interceptor.plugin(target); // plugin方法创建代理对象
     }
     return target;
   }

@@ -58,10 +58,10 @@ public abstract class BaseStatementHandler implements StatementHandler {
 
     this.typeHandlerRegistry = configuration.getTypeHandlerRegistry();
     this.objectFactory = configuration.getObjectFactory();
-
+    // 查询语句这里boundSql不会为空，查询的sql已经在前面处理了
     if (boundSql == null) { // issue #435, get the key before calculating the statement
       generateKeys(parameterObject); //这里可以为插入语句生成id
-      boundSql = mappedStatement.getBoundSql(parameterObject);
+      boundSql = mappedStatement.getBoundSql(parameterObject); // 里面进行了sql处理，通过了ognl处理去除了语句中的条件判断if等，并把#{}替换成了？
     }
 
     this.boundSql = boundSql;

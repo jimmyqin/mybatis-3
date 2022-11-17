@@ -50,7 +50,7 @@ public class MapperMethod {
   private final MethodSignature method;
 
   public MapperMethod(Class<?> mapperInterface, Method method, Configuration config) {
-    this.command = new SqlCommand(config, mapperInterface, method); //大概是MappedStatement处理
+    this.command = new SqlCommand(config, mapperInterface, method); //大概是MappedStatement处理，把一些属性封装到SqlCommand中
     this.method = new MethodSignature(config, mapperInterface, method); //根据方法签名解析方法相关数据，比如说返回值是什么类型之类的
   }
 
@@ -84,7 +84,7 @@ public class MapperMethod {
         } else if (method.returnsCursor()) {
           result = executeForCursor(sqlSession, args);
         } else {
-          Object param = method.convertArgsToSqlCommandParam(args);// mapper接口中方法参数处理
+          Object param = method.convertArgsToSqlCommandParam(args);// mapper接口中方法参数处理，拿到参数的别名和参数本身
           result = sqlSession.selectOne(command.getName(), param); // 执行主逻辑
           if (method.returnsOptional()
               && (result == null || !method.getReturnType().equals(result.getClass()))) {
@@ -302,8 +302,8 @@ public class MapperMethod {
       this.returnsOptional = Optional.class.equals(this.returnType);
       this.mapKey = getMapKey(method);
       this.returnsMap = this.mapKey != null;
-      this.rowBoundsIndex = getUniqueParamIndex(method, RowBounds.class);
-      this.resultHandlerIndex = getUniqueParamIndex(method, ResultHandler.class);
+      this.rowBoundsIndex = getUniqueParamIndex(method, RowBounds.class);//获取RowBounds在参数的中位置的索引
+      this.resultHandlerIndex = getUniqueParamIndex(method, ResultHandler.class); //获取ResultHandler在参数的中位置的索引
       this.paramNameResolver = new ParamNameResolver(configuration, method);
     }
 
